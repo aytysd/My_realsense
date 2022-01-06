@@ -1,0 +1,4 @@
+<launch>
+    <node name="my_keyboard" pkg="my_realsense" type="my_keyboard"/>
+    <node name="keyboard" pkg="keyboard" type="keyboard"/>
+</launch>

@@ -1,0 +1,138 @@
+<launch>
+
+    <!-- pass through -->
+    <arg name="width_max_y" value="0.70"/>
+    <arg name="width_min_y" value="0"/>
+    <arg name="width_max_x" value="0.5"/>
+    <arg name="width_min_x" value="-1.0"/>
+    <arg name="width_max_z" value="3.0"/>
+    <arg name="width_min_z" value="0"/>
+
+    <arg name="camera_pos_x" value="0"/>
+    <arg name="camera_pos_y" value="0"/>
+    <arg name="camera_pos_z" value="0.71"/>
+
+
+    <arg name="pass_x" value="true"/>
+    <arg name="pass_y" value="false"/>
+    <arg name="pass_z" value="true"/>
+
+    <!-- Euclideanclustering -->
+    <arg name="max_r" value="255"/> 
+    <arg name="max_g" value="255"/>
+    <arg name="max_b" value="255"/>
+
+    <arg name="ideal_r" value="255"/>
+    <arg name="ideal_g" value="255"/>
+    <arg name="ideal_b" value="255"/>
+
+    <arg name="min_r" value="150"/>
+    <arg name="min_g" value="150"/>
+    <arg name="min_b" value="150"/>
+
+    <arg name="max_ball_radius" value="1.0"/>
+    <arg name="min_ball_radius" value="0.0"/>
+
+    <arg name="ideal_size" value="0.4"/>
+
+    <arg name="type" value="0"/>
+
+    <!-- RegionGrowing -->
+    <arg name="radius" value="0.04"/>
+    <arg name="number_of_neighbours" value="10"/>
+    <arg name="smoothness_threshold" value="0.348"/>
+    <arg name="curvature_threshold" value="16"/>
+
+    <!-- RegionGrowingRGB -->
+    <arg name="distance_threshold" value="10"/>
+    <arg name="diff_threshold" value="10"/>
+    <arg name="merge_threshold" value="10"/>
+
+
+    <!-- downsampling -->
+    <arg name="voxel_size" value="0.035"/>
+    <arg name="downsampling" value="true"/>
+
+
+    <!-- segmentation -->
+    <arg name="loop" value="5"/>
+    <arg name="dist_th" value="0.01"/>
+
+    <!-- follow -->
+    <arg name="follow_radius_th" value="2.0"/>
+    <arg name="angular_kp" value="0.2"/>
+    <arg name="linear_kp" value="0.4"/>
+    <arg name="max_speed" value="3.0"/>
+    <arg name="max_rotate_speed" value="0.5"/>
+
+
+    <!--node name="realsense2_camera" pkg="realsense2_camera" type="rs_rgbd."/-->
+    <node name="Downsampling" pkg="my_realsense" type="Downsampling">
+        <param name="voxel_size" value="$(arg voxel_size)"/>
+        <param name="downsampling" value="$(arg downsampling)"/>
+    </node>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find my_realsense)/rviz/recognition.rviz" />   
+    <!--node name="EuclideanClustering" pkg="my_realsense" type="EuclideanClustering">
+        <param name="min_ball_radius" value="$(arg min_ball_radius)"/>
+        <param name="max_ball_radius" value="$(arg max_ball_radius)"/>
+        <param name="max_r" value="$(arg max_r)"/>
+        <param name="max_g" value="$(arg max_g)"/>
+        <param name="max_b" value="$(arg max_b)"/>
+        <param name="min_r" value="$(arg min_r)"/>
+        <param name="min_g" value="$(arg min_g)"/>
+        <param name="min_b" value="$(arg min_b)"/>
+        <param name="ideal_r" value="$(arg ideal_r)"/>
+        <param name="ideal_g" value="$(arg ideal_g)"/>
+        <param name="ideal_b" value="$(arg ideal_b)"/>
+        <param name="ideal_size" value="$(arg ideal_size)"/>
+        <param name="type" value="$(arg type)"/>
+    </node-->
+
+
+    <!--node name="RegionGrowing" pkg="my_realsense" type="RegionGrowing">
+        <param name="radius" value="$(arg radius)"/>
+        <param name="number_of_neighbours" value="$(arg number_of_neighbours)"/>
+        <param name="smoothness_threshold" value="$(arg smoothness_threshold)"/>
+        <param name="curvature_threshold" value="$(arg curvature_threshold)"/>
+    </node-->
+
+    <node name="RegionGrowingRGB" pkg="my_realsense" type="RegionGrowingRGB">
+        <param name="distance_threshold" value="$(arg distance_threshold)"/>
+        <param name="diff_threshold" value="$(arg diff_threshold)"/>
+        <param name="merge_threshold" value="$(arg merge_threshold"/>
+    </node>
+
+    <node name="Pass_Through" pkg="my_realsense" type="Pass_Through">
+        <param name="camera_pos_x" value="$(arg camera_pos_x)"/>
+        <param name="camera_pos_y" value="$(arg camera_pos_y)"/>
+        <param name="camera_pos_z" value="$(arg camera_pos_z)"/>
+        <param name="width_max_y" value="$(arg width_max_y)"/>
+        <param name="width_min_y" value="$(arg width_min_y)"/>
+        <param name="width_max_x" value="$(arg width_max_x)"/>
+        <param name="width_min_x" value="$(arg width_min_x)"/>
+        <param name="width_max_z" value="$(arg width_max_z)"/>
+        <param name="width_min_z" value="$(arg width_min_z)"/>
+        <param name="pass_x" value="$(arg pass_x)"/>
+        <param name="pass_z" value="$(arg pass_y)"/>
+        <param name="pass_z" value="$(arg pass_z)"/>
+    </node>
+
+    <!--node name="Segmentation" pkg="my_realsense" type="Segmentation">
+        <param name="loop" value="$(arg loop)"/>
+        <param name="dist_th" value="$(arg dist_th)"/>
+    </node-->
+
+    <!--node name="Follow" pkg="my_realsense" type="Follow">
+        <param name="follow_radius_th" value="$(arg follow_radius_th)"/>
+        <param name="linear_kp" value="$(arg linear_kp)"/>
+        <param name="angular_kp" value="$(arg angular_kp)"/>
+        <param name="max_speed" value="$(arg max_speed)"/>
+        <param name="max_rotate_speed" value="$(arg max_rotate_speed)"/>
+    </node-->
+
+    <!--node name="rosserial" pkg="rosserial_python" type="serial_node.py">
+        <param name="port" value="/dev/ttyACM0"/>
+        <param name="baud" value="57600"/>
+    </node-->
+
+</launch>
