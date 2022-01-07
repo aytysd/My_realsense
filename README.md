@@ -1,1 +1,2 @@
-first commit
+my_realsense.launch
+→どの特徴のものを識別するか，どのアルゴリズムを用いるかなどを特定
