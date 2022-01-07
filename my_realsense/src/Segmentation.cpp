@@ -7,7 +7,6 @@
 #include <pcl/sample_consensus/model_types.h>
 #include <pcl/sample_consensus/method_types.h>
 #include <pcl/segmentation/sac_segmentation.h>
-#include <pcl_ros/point_cloud.h>
 #include <pcl/filters/extract_indices.h>
 #include <../include/Segmentation.hpp>
 #include <../include/PCL_common.hpp>
@@ -19,13 +18,11 @@ void Segmentation::Downsampled_callback(const sensor_msgs::PointCloud2& msg)
   try
   {
     PCL_common::sensor_to_PointCloud( msg, cloud_ptr_ );
-
-    PointCloud cloud_output;
-    // cloud_output.reset();
+    PointCloud::Ptr out_ptr( new PointCloud );
     sensor_msgs::PointCloud2 output_msg;
-    // cloud_output = cloud_ptr_;
-    pcl::copyPointCloud( *cloud_ptr_, cloud_output );
-    PointCloud::Ptr cloud_output_ptr( new PointCloud( cloud_output ) );
+
+    pcl::ModelCoefficients::Ptr coefficients_ptr( new pcl::ModelCoefficients );
+    pcl::PointIndicesPtr inliers_ptr( new pcl::PointIndices );
 
     for (size_t i = 0; i < loop_; i++) 
     {
@@ -33,25 +30,20 @@ void Segmentation::Downsampled_callback(const sensor_msgs::PointCloud2& msg)
       segmentation_config
       (
         dist_th_,
-        cloud_output_ptr,
+        cloud_ptr_,
         true,
-        pcl::SACMODEL_PLANE,
+        pcl::SACMODEL_NORMAL_PARALLEL_PLANE,
         pcl::SAC_RANSAC
       );
     
-      seg_.segment (inliers_, coefficients_);
+      seg_.segment( *inliers_ptr, *coefficients_ptr );
+      PCL_common::extract( inliers_ptr, cloud_ptr_, *cloud_ptr_ );
 
-      pcl::PointIndices::Ptr inliers_ptr( new pcl::PointIndices( inliers_ ) );
-
-      pcl::ExtractIndices<pcl::PointXYZRGBA> extract;
-
-      extract.setInputCloud( cloud_output_ptr );
-      extract.setIndices( inliers_ptr );
-      extract.setNegative( false );
-      extract.filter( *cloud_output_ptr );
     }
 
-    PCL_common::PointCloud_to_sensor( output_msg, cloud_output_ptr );
+    PCL_common::extract( inliers_ptr, cloud_ptr_, *out_ptr );
+    PCL_common::PointCloud_to_sensor( output_msg, out_ptr );
+
     pub_segmented_.publish( output_msg );
 
     reset();
@@ -96,6 +88,6 @@ void Segmentation::segmentation_config
 
 void Segmentation::reset( void )
 {
-  // coefficients_.reset();
-  // inliers_.reset();
+  // coefficients_ptr_.reset();
+  // inliers_ptr_.reset();
 }

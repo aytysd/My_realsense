@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   visualization_msgs
+  message_generation
 )
 
 find_package(PCL REQUIRED) 
@@ -56,11 +57,10 @@ find_package(tf2_ros REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+   FILES
+   PointIndices.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -77,10 +77,11 @@ find_package(tf2_ros REQUIRED)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   pcl_msgs#   sensor_msgs#   std_msgs
-# )
+generate_messages(
+   DEPENDENCIES
+   geometry_msgs
+   std_msgs#   pcl_msgs#   sensor_msgs#   std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -114,7 +115,7 @@ find_package(tf2_ros REQUIRED)
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES cloud_exercise
-    CATKIN_DEPENDS eigen_conversions geometry_msgs pcl_conversions pcl_msgs pcl_ros sensor_msgs std_msgs
+    CATKIN_DEPENDS eigen_conversions geometry_msgs pcl_conversions pcl_msgs pcl_ros sensor_msgs std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -149,11 +150,11 @@ include_directories(
 add_executable(Downsampling src/Downsampling.cpp)
 #add_executable(Clustering src/Clustering.cpp)
 add_executable(Pass_Through src/Pass_Through.cpp src/my_tf.cpp)
-#add_executable(EuclideanClustering src/EuclideanClustering.cpp src/PCL_common.cpp src/Selection.cpp)
+add_executable(EuclideanClustering src/EuclideanClustering.cpp src/PCL_common.cpp src/Selection.cpp)
 #add_executable(Follow src/Follow.cpp)
 #add_executable(RegionGrowing src/RegionGrowing.cpp src/PCL_common.cpp)
-add_executable(RegionGrowingRGB src/RegionGrowingRGB.cpp src/PCL_common.cpp)
-#add_executable(Segmentation src/Segmentation.cpp src/PCL_common.cpp)
+#add_executable(RegionGrowingRGB src/RegionGrowingRGB.cpp src/PCL_common.cpp)
+add_executable(Segmentation src/Segmentation.cpp src/PCL_common.cpp)
 #dd_executable(my_tf src/my_tf.cpp)
 #target_link_libraries(my_tf ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
@@ -176,20 +177,20 @@ target_link_libraries(Downsampling
 )
 
 
-#target_link_libraries(EuclideanClustering
-#   ${catkin_LIBRARIES}
-#   ${PCL_LIBRARIES}
-#)
+target_link_libraries(EuclideanClustering
+   ${catkin_LIBRARIES}
+   ${PCL_LIBRARIES}
+)
 
 target_link_libraries(Pass_Through
    ${catkin_LIBRARIES}
    ${PCL_LIBRARIES}
 )
 
-target_link_libraries(RegionGrowingRGB
-   ${catkin_LIBRARIES}
-   ${PCL_LIBRARIES}
-)
+#target_link_libraries(RegionGrowingRGB
+#   ${catkin_LIBRARIES}
+#   ${PCL_LIBRARIES}
+#)
 
 
 #target_link_libraries(Follow
@@ -203,10 +204,10 @@ target_link_libraries(RegionGrowingRGB
 #)
 
 
-#target_link_libraries(Segmentation
-#   ${catkin_LIBRARIES}
-#   ${PCL_LIBRARIES}
-#)
+target_link_libraries(Segmentation
+   ${catkin_LIBRARIES}
+   ${PCL_LIBRARIES}
+)
 
 
 

@@ -10,6 +10,7 @@
 #include <pcl_ros/point_cloud.h>
 #include <pcl/filters/extract_indices.h>
 #include <../include/PCL_common.hpp>
+#include <my_realsense/PointIndices.h>
 
 class Segmentation
 {
@@ -22,8 +23,7 @@ private:
     ros::Subscriber sub_raw_;
 
     PointCloud::Ptr cloud_ptr_;
-    pcl::ModelCoefficients coefficients_;
-    pcl::PointIndices inliers_;
+
     pcl::SACSegmentation<PointT> seg_;
 
     int loop_;
@@ -49,7 +49,7 @@ public:
     Segmentation():
         np_( "~" ),
         sub_raw_( nh_.subscribe( "/Downsampled", 10, &Segmentation::Downsampled_callback, this ) ),
-        pub_segmented_( nh_.advertise< sensor_msgs::PointCloud2>( "Segmented", 10 ) ),
+        pub_segmented_( nh_.advertise< sensor_msgs::PointCloud2 >( "/Segmented", 10 ) ),
         cloud_ptr_( new PointCloud )
     {
         np_.getParam( "loop", loop_ );

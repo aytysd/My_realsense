@@ -97,8 +97,6 @@ void Pass_Through::pass_through
         *cloud = passed_through;
     }
 
-
-    // pcl_conversions::fromPCL( passed_through, output_msg );
     pcl_conversions::fromPCL( *cloud, output_msg );
     pub_passed_through_.publish( output_msg );
 }

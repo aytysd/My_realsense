@@ -1,8 +1,8 @@
 <launch>
 
     <!-- pass through -->
-    <arg name="width_max_y" value="0.70"/>
-    <arg name="width_min_y" value="0"/>
+    <arg name="width_max_y" value="0.71"/>
+    <arg name="width_min_y" value="0.31"/>
     <arg name="width_max_x" value="0.5"/>
     <arg name="width_min_x" value="-1.0"/>
     <arg name="width_max_z" value="3.0"/>
@@ -14,21 +14,21 @@
 
 
     <arg name="pass_x" value="true"/>
-    <arg name="pass_y" value="false"/>
+    <arg name="pass_y" value="true"/>
     <arg name="pass_z" value="true"/>
 
     <!-- Euclideanclustering -->
-    <arg name="max_r" value="255"/> 
-    <arg name="max_g" value="255"/>
-    <arg name="max_b" value="255"/>
+    <arg name="max_r" value="100"/> 
+    <arg name="max_g" value="100"/>
+    <arg name="max_b" value="100"/>
 
-    <arg name="ideal_r" value="255"/>
-    <arg name="ideal_g" value="255"/>
-    <arg name="ideal_b" value="255"/>
+    <arg name="ideal_r" value="50"/>
+    <arg name="ideal_g" value="50"/>
+    <arg name="ideal_b" value="50"/>
 
-    <arg name="min_r" value="150"/>
-    <arg name="min_g" value="150"/>
-    <arg name="min_b" value="150"/>
+    <arg name="min_r" value="0"/>
+    <arg name="min_g" value="0"/>
+    <arg name="min_b" value="0"/>
 
     <arg name="max_ball_radius" value="1.0"/>
     <arg name="min_ball_radius" value="0.0"/>
@@ -55,7 +55,7 @@
 
 
     <!-- segmentation -->
-    <arg name="loop" value="5"/>
+    <arg name="loop" value="10"/>
     <arg name="dist_th" value="0.01"/>
 
     <!-- follow -->
@@ -96,11 +96,11 @@
         <param name="curvature_threshold" value="$(arg curvature_threshold)"/>
     </node-->
 
-    <node name="RegionGrowingRGB" pkg="my_realsense" type="RegionGrowingRGB">
+    <!--node name="RegionGrowingRGB" pkg="my_realsense" type="RegionGrowingRGB">
         <param name="distance_threshold" value="$(arg distance_threshold)"/>
         <param name="diff_threshold" value="$(arg diff_threshold)"/>
         <param name="merge_threshold" value="$(arg merge_threshold"/>
-    </node>
+    </node-->
 
     <node name="Pass_Through" pkg="my_realsense" type="Pass_Through">
         <param name="camera_pos_x" value="$(arg camera_pos_x)"/>
@@ -113,14 +113,14 @@
         <param name="width_max_z" value="$(arg width_max_z)"/>
         <param name="width_min_z" value="$(arg width_min_z)"/>
         <param name="pass_x" value="$(arg pass_x)"/>
-        <param name="pass_z" value="$(arg pass_y)"/>
+        <param name="pass_y" value="$(arg pass_y)"/>
         <param name="pass_z" value="$(arg pass_z)"/>
     </node>
 
-    <!--node name="Segmentation" pkg="my_realsense" type="Segmentation">
+    <node name="Segmentation" pkg="my_realsense" type="Segmentation">
         <param name="loop" value="$(arg loop)"/>
         <param name="dist_th" value="$(arg dist_th)"/>
-    </node-->
+    </node>
 
     <!--node name="Follow" pkg="my_realsense" type="Follow">
         <param name="follow_radius_th" value="$(arg follow_radius_th)"/>
